@@ -1,0 +1,7 @@
+redditUsername = placeholder1
+redditPassword = placeholder2
+subReddit = earthPorn
+twitterAPIKey = placeholder3
+twitterAPISecret = placeholder4
+twitterAccessToken = placeholder5
+twitterAccessSecretToken = placeholder6

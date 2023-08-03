@@ -1,0 +1,5 @@
+redditUsername =
+redditPassword =
+subReddit =
+instagramUser =
+instagramPassword =
