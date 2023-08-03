@@ -1,5 +1,7 @@
-redditUsername =
-redditPassword =
-subReddit =
-instagramUser =
-instagramPassword =
+redditUsername = <reddit key name>
+redditPassword = <reddit key password>
+subReddit = <subreddit name>
+twitterAPIKey = <twitter api key>
+twitterAPISecret = <twitter api secret>
+twitterAccessToken = <twitter access token>
+twitterAccessSecretToken = <twitter access secret token>

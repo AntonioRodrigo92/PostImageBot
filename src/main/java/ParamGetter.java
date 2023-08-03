@@ -26,12 +26,20 @@ public class ParamGetter {
         return params.get("subReddit");
     }
 
-    public String getInstagramUser() {
-        return params.get("instagramUser");
+    public String getTwitterAPIKey() {
+        return params.get("twitterAPIKey");
     }
 
-    public String getInstagramPassword() {
-        return params.get("instagramPassword");
+    public String getTwitterAccessToken() {
+        return params.get("twitterAccessToken");
+    }
+
+    public String getTwitterAPISecret() {
+        return params.get("twitterAPISecret");
+    }
+
+    public String getTwitterAccessSecretToken() {
+        return params.get("twitterAccessSecretToken");
     }
 
     private void init (String fileLocation) throws FileNotFoundException {

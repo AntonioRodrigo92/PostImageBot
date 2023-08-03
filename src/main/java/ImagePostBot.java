@@ -17,8 +17,10 @@ public class ImagePostBot {
         String PASSWORD = pg.getRedditPassword();
         String SUBREDDIT = pg.getSubReddit();
 
-        String INSTAGRAM_USERNAME = pg.getInstagramUser();
-        String INSTAGRAM_PASSWORD = pg.getInstagramPassword();
+        String API_KEY = pg.getTwitterAPIKey();
+        String API_SECRET_KEY = pg.getTwitterAPISecret();
+        String ACCESS_TOKEN = pg.getTwitterAccessToken();
+        String ACCESS_TOKEN_SECRET = pg.getTwitterAccessSecretToken();
 
         SubRedditPost subRedditPost;
         int attempts = 0;
@@ -28,20 +30,36 @@ public class ImagePostBot {
                 subRedditPost = new SubRedditPost(USERNAME, PASSWORD, SUBREDDIT, "top");
 
                 System.out.println("redditAPI created");
-                InstagramAPI instagramAPI = new InstagramAPI(INSTAGRAM_USERNAME, INSTAGRAM_PASSWORD);
+                TweetAPI tweetAPI = new TweetAPI(API_KEY, API_SECRET_KEY, ACCESS_TOKEN, ACCESS_TOKEN_SECRET);
                 System.out.println("tweetAPI created");
 
                 String author = subRedditPost.getAuthor();
                 String title = subRedditPost.getTitle();
                 String imageUrl = subRedditPost.getImageUrl();
                 String permalink = subRedditPost.getPermalink();
+//                boolean isLocked = redditAPI.isLocked();
 
                 String comment = "\n" + title + "\n\nImagem postada por u/" + author + ". Obrigado!" +
                         "\n(link: " + permalink + ")";
+                BufferedImage img = ImageDownloader.urlToImage(imageUrl);
 
-                byte[] img = ImageDownloader.urlToByteArray(imageUrl);
-                instagramAPI.postPic(img, comment);
+                int w = img.getWidth();
+                int h = img.getHeight();
 
+                System.out.println("w: " + w);
+                System.out.println("h: " + h);
+
+                while (w > 1200 || h > 675) {
+                    img = ImageDownloader.resizeImage(img);
+                    w = img.getWidth();
+                    h = img.getHeight();
+
+                    System.out.println("w: " + w);
+                    System.out.println("h: " + h);
+                }
+
+                InputStream imgFile = ImageDownloader.bufferedImageToInputStream(img);
+                tweetAPI.postImageTweet(comment, imgFile, title);
                 break;
 
             } catch (Exception e) {
