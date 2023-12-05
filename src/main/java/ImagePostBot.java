@@ -36,11 +36,18 @@ public class ImagePostBot {
                 String imageUrl = subRedditPost.getImageUrl();
                 String permalink = subRedditPost.getPermalink();
 
+                System.out.println("author: " + author);
+                System.out.println("title: " + title);
+                System.out.println("imageURL: " + imageUrl);
+                System.out.println("permalink: " + permalink);
+
                 String comment = "\n" + title + "\n\nImagem postada por u/" + author + ". Obrigado!" +
                         "\n(link: " + permalink + ")";
 
                 byte[] img = ImageDownloader.urlToByteArray(imageUrl);
+                System.out.println("byte array successful");
                 instagramAPI.postPic(img, comment);
+                System.out.println("POSTED!");
 
                 break;
 
