@@ -5,6 +5,7 @@ import java.io.InputStream;
 public class ImagePostBot {
 
     public static void main (String[] args) {
+        int MAX_RETRIES = 5;
         String paramPath = args[0];
         ParamGetter pg = null;
         try {
@@ -21,11 +22,12 @@ public class ImagePostBot {
         String INSTAGRAM_PASSWORD = pg.getInstagramPassword();
 
         SubRedditPost subRedditPost;
-        int attempts = 0;
+        int attempt = 0;
 
-        while (attempts < 5) {
+        while (attempt < MAX_RETRIES) {
             try {
-                subRedditPost = new SubRedditPost(USERNAME, PASSWORD, SUBREDDIT, "top");
+                subRedditPost = new SubRedditPost(USERNAME, PASSWORD, SUBREDDIT, "top",
+                        MAX_RETRIES, attempt);
 
                 System.out.println("redditAPI created");
                 InstagramAPI instagramAPI = new InstagramAPI(INSTAGRAM_USERNAME, INSTAGRAM_PASSWORD);
@@ -53,8 +55,8 @@ public class ImagePostBot {
 
             } catch (Exception e) {
                 e.printStackTrace();
-                attempts++;
-                System.out.println("attempts: " + attempts);
+                attempt++;
+                System.out.println("attempt: " + attempt);
                 try {
                     Thread.sleep(600000);
                 } catch (InterruptedException interruptedException) {

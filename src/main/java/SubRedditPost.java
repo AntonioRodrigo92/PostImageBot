@@ -22,11 +22,12 @@ public class SubRedditPost {
     private String imageUrl;
     private String permalink;
 
-    public SubRedditPost(String username, String password, String subReddit, String searchType) {
+    public SubRedditPost(String username, String password, String subReddit, String searchType,
+                         int maxRetires, int attempt) {
         this.username = username;
         this.password = password;
-        String json = postAsString(subReddit, searchType);
-        JSONObject data = getData(json);
+        String json = postAsString(subReddit, searchType, String.valueOf(maxRetires));
+        JSONObject data = getData(json, attempt);
         this.author = data.getString( "author");
         this.title = data.getString( "title");
         this.imageUrl = data.getString("url");
@@ -49,7 +50,7 @@ public class SubRedditPost {
         return permalink;
     }
 
-    private String postAsString (String subReddit, String searchType) {
+    private String postAsString (String subReddit, String searchType, String max_retires) {
         RestTemplate restTemplate = new RestTemplate();
         org.springframework.http.HttpHeaders headers = new org.springframework.http.HttpHeaders();
         String authToken = getAuthToken();
@@ -57,7 +58,7 @@ public class SubRedditPost {
         headers.put("User-Agent",
                 Collections.singletonList("tomcat:com.e4developer.e4reddit-test:v1.0 (by /u/bartoszjd)"));
         HttpEntity<String> entity = new HttpEntity<String>("parameters", headers);
-        String url = "https://oauth.reddit.com/r/"+subReddit+"/" + searchType + "?limit=1";
+        String url = "https://oauth.reddit.com/r/"+subReddit+"/" + searchType + "?limit=" + max_retires;
         ResponseEntity<String> response
                 = restTemplate.exchange(url, HttpMethod.GET, entity, String.class);
         return response.getBody();
@@ -88,11 +89,11 @@ public class SubRedditPost {
         return String.valueOf(map.get("access_token"));
     }
 
-    private JSONObject getData (String json) {
+    private JSONObject getData (String json, int attempt) {
         JSONObject obj = new JSONObject(json);
         JSONObject data = obj.getJSONObject("data");
         JSONArray child = (JSONArray)data.get("children");
-        data = (JSONObject)child.get(0);
+        data = (JSONObject)child.get(attempt);
         data = (JSONObject)data.get("data");
 
         return data;
